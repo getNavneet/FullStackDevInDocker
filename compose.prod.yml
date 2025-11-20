@@ -1,0 +1,59 @@
+name: fullstack-prod
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: backend-prod
+    env_file:
+      - ./backend/.env.production
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - prod-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: frontend-prod
+    ports:
+      - "80:80"
+    env_file:
+      - ./frontend/.env.production
+    depends_on:
+      - backend
+    networks:
+      - prod-net
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-prod
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoUser
+      - MONGO_INITDB_ROOT_PASSWORD=mongoPass
+    networks:
+      - prod-net
+
+  redis:
+    image: redis:latest
+    container_name: redis-prod
+    restart: always
+    volumes:
+      - redis-data:/data
+    networks:
+      - prod-net
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  prod-net:
