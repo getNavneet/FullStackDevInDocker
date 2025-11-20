@@ -4,7 +4,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: backend-container
     ports:
       - "8080:8080"
@@ -22,7 +22,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: frontend-container
     ports:
       - "5173:5173"
@@ -41,7 +41,7 @@ services:
     container_name: mongodb-container
     restart: always
     ports:
-      - "27018:27017"
+      - "27018:27017"  
     volumes:
       - mongo-data:/data/db
     environment:
